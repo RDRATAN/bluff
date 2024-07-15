@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+.selectable-image.selected {
+  border: 2px solid #26ff00; /* Orange border with 2px width */
+}
+.btn.btn-info.btn:disabled {
+  background-color: lightgray;
+}

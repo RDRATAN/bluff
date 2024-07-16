@@ -241,7 +241,7 @@ io.on("connection", (socket) => {
     let winner = "";
     // Check if the last player has finished their cards and won
     rooms[room].forEach((player,index) => {
-      if (player.id==lastPlayer[room] &&player.cardsCount === 0) {
+      if (player.id==lastPlayer[room] &&player.cardsCount === 0 && (player.id!==playerId||passes[room]?.length==3)) {
 
         winner = player.name;
         isGameOver = true;

@@ -91,6 +91,10 @@ const passes = {};
 const bluffwinner = {};
 
 
+app.get('/rooms',(req,res)=>{
+  res.json(rooms)
+});
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 

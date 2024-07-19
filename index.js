@@ -241,7 +241,7 @@ io.on("connection", (socket) => {
     let winner = "";
     // Check if the last player has finished their cards and won
     rooms[room].forEach((player,index) => {
-      if (player.id===lastPlayer[room] &&player.cardsCount === 0 && (player.id!==playerId||passes[room]?.length===3)) {
+      if (player.id==lastPlayer[room] &&player.cardsCount === 0 && (player.id!==playerId||passes[room]?.length==3)) {
 
         winner = player.name;
         isGameOver = true;
@@ -315,6 +315,21 @@ io.on("connection", (socket) => {
         }
       });
 
+      let isWin=false;
+      let winner="";
+      rooms[room].forEach((player,index)=>{
+          if(player.cardsCount==0){
+           winner=player;
+           isWin=true
+  
+          }
+        });
+  
+  if(isWin){
+    io.to(room).emit("game_over", winner);
+  
+  }
+  else{
       // Update players with new game state
       io.to(room).emit("update_players", rooms[room]);
       io.to(room).emit("card_played",  {cardcnt:currentActualCardsonTable[room].length,cardrank:""});
@@ -322,7 +337,7 @@ io.on("connection", (socket) => {
       io.to(rooms[room][1].id).emit("cards", cards[room].p2);
       io.to(rooms[room][2].id).emit("cards", cards[room].p3);
       io.to(rooms[room][3].id).emit("cards", cards[room].p4);
-
+  }
     }
 
     else{
@@ -462,18 +477,31 @@ io.on("connection", (socket) => {
     lastPlayer[room] = "";
     lastActualCards[room] = [];
 
-    // Update players with new game state
+      //check if anyone have finished his cards
+    let isWin=false;
+    let winner="";
+    rooms[room].forEach((player,index)=>{
+        if(player.cardsCount==0){
+         winner=player;
+         isWin=true
+
+        }
+      });
+
+if(isWin){
+  io.to(room).emit("game_over", winner);
+
+}
+   else{ // Update players with new game state
     io.to(room).emit("update_players", rooms[room]);
     io.to(room).emit("card_played",  {cardcnt:currentActualCardsonTable[room].length,cardrank:""});
     io.to(room).emit("bluff_resolved", false);
-
-
     io.to(rooms[room][0].id).emit("cards", cards[room].p1);
     io.to(rooms[room][1].id).emit("cards", cards[room].p2);
     io.to(rooms[room][2].id).emit("cards", cards[room].p3);
     io.to(rooms[room][3].id).emit("cards", cards[room].p4);
 
-
+   }
     
    
 
